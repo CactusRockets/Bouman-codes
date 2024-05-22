@@ -34,9 +34,6 @@ void analyzeStateOfRocket() {
   if((maximumAltitudeValue - altitudeAtual) > RANGE_FALL_DETECTION) {
     isDropping = true;
   }
-  if(soloData.openParachute == 1) {
-    isDropping = true;
-  }
 }
 
 void activateStage1() {
@@ -105,10 +102,10 @@ void checkApogee() {
   }
 
   if(parachute1Activated) {
-    allData.data.parachute = 1;
+    allData.parachute = 1;
   }
 
   if(parachute2Activated) {
-    allData.data.parachute = 2;
+    allData.parachute = 2;
   }
 }

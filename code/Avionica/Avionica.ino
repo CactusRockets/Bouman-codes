@@ -4,13 +4,9 @@
 #include <SPI.h>
 
 #define ENABLE_SERIAL true
-#define ENABLE_BUZZER false
 #define ENABLE_SD false
-#define ENABLE_TELEMETRY false
-#define ENABLE_GPS false
-
-#define ALAVANCA 26
-#define ALAVANCA_BEEP_TIME 300
+#define ENABLE_TELEMETRY true
+#define ENABLE_GPS true
 
 struct AvionicData {
   float time;
@@ -51,26 +47,23 @@ struct SoloData {
 PacketData allData;
 SoloData soloData;
 
+String cots_message = "";
 String telemetry_message = "";
 String sd_message = "";
 String solo_message = "";
 
-double alavancaTime = 0;
-bool isBeeping = false;
-bool alavancaAcionada = false;
-
 float initial_altitude;
+int package_counter = 0;
 
 // import external files
 #include "serial.h"     // debug prints
-#include "buzzer.h"     // sinal sonoro
 #include "telemetry.h"  // telemetria
 #include "moduleSD.h"   // armazenamento SD
 #include "gps.h"        // localizacao gps
+#include "cots.h"        // cots
 
 void setupComponents();
 void getSensorsMeasures();
-void beepIntermitating();
 void activateParachutes();
 void resetStructs();
 void checkApogee();
@@ -82,7 +75,9 @@ void setup() {
   telemetry_message.reserve(1500);
 
   // Inicializa a serial
-  Serial.begin(115200);
+  if(ENABLE_SERIAL) {
+    Serial.begin(115200);
+  }
 
   // Inicializa sensores e configura pinos
   setupComponents();
@@ -90,48 +85,39 @@ void setup() {
   // Zera todos os valores
   resetStructs();
 
+  // Liga LED do ESP32, integrado ao pino 2, como sinal que tudo iniciou corretamente
+  pinMode(2, OUTPUT);
+  digitalWrite(2, HIGH);
+
   delay(1000);
 }
 
 void loop() {
-  if(digitalRead(ALAVANCA) == HIGH) {
-    if(alavancaAcionada == false) {
-      // initial_altitude = getAltitude();
-      alavancaAcionada = true;
-    }
+  getSensorsMeasures();
 
-    getSensorsMeasures();
+  // Armazena o tempo de execução
+  allData.data.time = millis() / 1000.0;
 
-    beepIntermitating();
+  saveMessages();
 
-    // Armazena o tempo de execução
-    allData.data.time = millis() / 1000.0;
+  println(telemetry_message);
 
-    saveMessages();
-
-    println(telemetry_message);
-
-    if(ENABLE_SD) {
-      writeOnSD(sd_message);
-    }
-
-    if(ENABLE_TELEMETRY) {
-      transmit();
-      if(hasSoloMessage()) {
-        receive();
-      }
-    }
-
-    delay(500);
+  if(ENABLE_SD) {
+    writeOnSD(sd_message);
   }
+
+  if(ENABLE_TELEMETRY) {
+    transmit();
+    if(hasSoloMessage()) {
+      receive();
+    }
+  }
+
+  delay(500);
 }
 
 void setupComponents() {
-  pinMode(ALAVANCA, INPUT);
-
-  if(ENABLE_BUZZER) {
-    setupBuzzer();
-  }
+  setupCots();
 
   if(ENABLE_TELEMETRY) {
     setupTelemetry();
@@ -147,22 +133,11 @@ void setupComponents() {
 }
 
 void getSensorsMeasures() {
+  readCots();
+
   //Medições GPS
   if(ENABLE_GPS) {
     updateGPSData();
-  }
-}
-
-void beepIntermitating() {
-  if(millis() - alavancaTime >= ALAVANCA_BEEP_TIME) {
-    alavancaTime = millis();
-    isBeeping = !isBeeping;
-    
-    if(isBeeping) {
-      activateBuzzer();
-    } else {
-      desactivateBuzzer();
-    }
   }
 }
 
@@ -176,18 +151,73 @@ void resetStructs() {
   soloData = { 0 }; // openParachute
 }
 
+String fixNumberSize(int num, int width, bool enableSignal=false){
+  int numPositive = (num >= 0 ? num : -num);
+  String formattedString = String(numPositive);
+
+  while (formattedString.length() < width){
+    formattedString = "0" + formattedString;
+  }
+
+  if(!enableSignal) return formattedString;
+
+  if(num < 0) {
+    formattedString = "-" + formattedString;
+  } else {
+    formattedString = "+" + formattedString;
+  }
+
+  return formattedString;
+}
+
 void saveMessages() {
-  String packetString = String(allData.data.time, 3)
-    + "," + String(allData.bmpData.temperature, 2)
-    + "," + String(allData.bmpData.pressure, 2)
-    + "," + String(allData.bmpData.altitude, 3)
-    + "," + String(allData.imuData.accelZ)
-    + "," + String(allData.data.parachute);
+  telemetry_message = telemetryMessage();
+  sd_message = sdMessage();
+  package_counter++;
+}
+
+String telemetryMessage(){
+  // Padráo da Mensagem:
+  // S -> Sinal (pode ser "+" ou "-")
+  // P -> Numeracao do Pacote
+  // A -> Altitude medida
+  // C -> Acelecerao no eixo Z
+  // W -> Quaternion w
+  // X -> Quaternion x
+  // Y -> Quaternion y
+  // Z -> Quaternion z
+  // P -> Estado do Paraquedas
+  // T -> Latitude do GPS
+  // G -> Longitude do GPS
+  // Ex.: PPPPPSAAAAAASCCCCWWWXXXYYYZZZPSTTTTTSGGGGG
+  
+  String packetString = fixNumberSize(package_counter, 5) + cots_message;
     
-  String gpsString = String(allData.gpsData.latitude, 3)
-    + "," + String(allData.gpsData.longitude, 3);
+  String gpsString = fixNumberSize((int) (allData.gpsData.latitude*1000), 5, true)
+    + fixNumberSize((int) (allData.gpsData.longitude*1000), 5, true);
 
-  telemetry_message = packetString + ',' + gpsString;
+  return (packetString + gpsString);
+}
 
-  sd_message = telemetry_message;
+String sdMessage(){
+  // Padráo da Mensagem:
+  // S -> Sinal (pode ser "+" ou "-")
+  // P -> Numeracao do Pacote
+  // A -> Altitude medida
+  // C -> Acelecerao no eixo Z
+  // W -> Quaternion w
+  // X -> Quaternion x
+  // Y -> Quaternion y
+  // Z -> Quaternion z
+  // P -> Estado do Paraquedas
+  // T -> Latitude do GPS
+  // G -> Longitude do GPS
+  // Ex.: PPPPPSAAAAAASCCCCWWWXXXYYYZZZPSTTTTTSGGGGG
+  
+  String packetString = fixNumberSize(package_counter, 5) + cots_message;
+    
+  String gpsString = fixNumberSize((int) (allData.gpsData.latitude*1000), 5, true)
+    + fixNumberSize((int) (allData.gpsData.longitude*1000), 5, true);
+
+  return (packetString + gpsString);
 }

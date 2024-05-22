@@ -1,5 +1,9 @@
 #include "FastIMU.h"
 
+#define RAD2DEG 57.2958
+#define DEG2RAD 0.0174533
+#define GRAVITY 9.80665
+
 /* CONFIGURAÇÕES MPU */
 #define IMU_ADDRESS 0x68
 
@@ -94,9 +98,11 @@ void setupMPU() {
   }
   println("MPU6050 conectado!");
 
+  delay(500);
   if(PERFORM_CALIBRATION) {
     calibrate();
   }
+  time_elapsed = 0;
 }
 
 void readMPU() {
@@ -112,7 +118,7 @@ void readMPU() {
   double accX = IMUAccel.accelX;
   double accY = IMUAccel.accelY;
   double accZ = IMUAccel.accelZ;
-  
+
   double dt = (millis() - time_elapsed) / 1000.0;
   time_elapsed = millis() * 1.0;
 

@@ -10,8 +10,6 @@ void setupSd() {
   
   // verifica se o cartão SD não está presente ou não pode ser inicializado
   while(!SD.begin(CS_SDPIN)) {
-    // programa encerra
-    activateBuzzer();
     println("Falha, verifique se o cartão está presente.");
   }
 

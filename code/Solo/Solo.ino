@@ -2,71 +2,16 @@
 #include <Wire.h>
 
 #define BUTTON_PIN 4
+#define EXPECTED_PACKET_SIZE 31
 
 int valueButton;
 
-// O tamanho deste pacote não deve exceder 32 bytes
-struct PacketData {
-  float time;
-  float altitude_MPU;
-  float temperature;
-  float pressure;
-  float altitude;
-  float variation_altitude;
-  float acceleration_Z;
-  int parachute; 
-};
+String solo_message = "";
+String telemetry_message = "";
 
-struct PacketGPSData {
-  long latitude, longitude;
-};
-
-struct AllPacketData {
-  PacketData data;
-  PacketGPSData GPSData;
-};
-
-struct SoloData {
-  int parachute; 
-};
-
-String soloMessage = "";
-String AllDados = "";
-
-AllPacketData allData;
-SoloData soloData;
+bool parachuteOpened = false;
 
 #include "telemetry.h"
-
-void clearData() {
-  allData = {
-    { 0,0,0,0,0,0,0,0 },
-    { 0,0 }
-  };
-  soloData = { 0 };
-}
-
-void printData() {
-  if(LORA_WAY == LORA_STRING_METHOD) {
-    Serial.println(AllDados);
-
-  } else if(LORA_WAY == LORA_STRUCT_METHOD) {
-    // Armazena os dados em uma string
-    String dados = String(allData.data.time, 3)         
-      + "," + String(allData.data.temperature, 3)       
-      + "," + String(allData.data.altitude, 3)          
-      + "," + String(allData.data.variation_altitude, 3)
-      + "," + String(allData.data.acceleration_Z, 3)    
-      + "," + String(allData.data.altitude_MPU, 3)      
-      + "," + String(allData.data.pressure, 3)
-      + "," + String(allData.data.parachute);     
-    String GPSDados = String(allData.GPSData.latitude, 3)
-      + "," + String(allData.GPSData.longitude, 3);
-
-    AllDados = dados + "," + GPSDados;
-    Serial.println(AllDados);
-  }
-}
 
 void setup() {
   Serial.begin(9600);
@@ -76,36 +21,28 @@ void setup() {
   pinMode(M0, OUTPUT);
   pinMode(M1, OUTPUT);
 
-  clearData();
   setupTelemetry();
 }
 
 void loop() {
+  telemetry_message.clear();
   if(LoRaSerial.available() > 0) {
-
-    if(LORA_WAY == LORA_STRING_METHOD) {
-      receiveString();
-
-    } else if(LORA_WAY == LORA_STRUCT_METHOD) {
-      receive(&allData);
-      
-    }
-    printData();
+    receiveString();
+    // Imprime somente os pacotes sem erros
+    // if(telemetry_message.length() == EXPECTED_PACKET_SIZE) {
+    //   Serial.println(telemetry_message);
+    // }
+    Serial.println(telemetry_message);
   }
 
-  valueButton = digitalRead(BUTTON_PIN);
-  if(valueButton == LOW) {
+  // valueButton = digitalRead(BUTTON_PIN);
+  // if(valueButton == LOW) {
+  //   Serial.print("Botão Apertado");
 
-    soloData.parachute = 1;
-    soloMessage = "1";
+  //   parachuteOpened = true;
+  //   solo_message = "1";
 
-    if(LORA_WAY == LORA_STRING_METHOD) {
-      transmitString(soloMessage);
-
-    } else if(LORA_WAY == LORA_STRUCT_METHOD) {
-      transmit(&soloData);
-
-    }
-  }
+  //   transmitString(solo_message);
+  // }
 }
 

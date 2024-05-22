@@ -5,18 +5,11 @@
 // Pinos da Serial 2 do ESP32
 #define RX2_PIN 16
 #define TX2_PIN 17
-#define M0 33
+#define M0 33 
 #define M1 32
-
-#define LORA_STRING_METHOD 1
-#define LORA_STRUCT_METHOD 2
-
-#define LORA_WAY 1
 
 // Usando a Serial 2 do ESP32
 HardwareSerial LoRaSerial(2);
-int sizeAllData = sizeof(allData);
-int sizeSoloData = sizeof(soloData);
 
 void setupTelemetry() {
 
@@ -42,17 +35,6 @@ void modoTransmissor() {
   digitalWrite(M1, LOW);
 }
 
-void transmit(const SoloData* soloData) {
-  modoTransmissor();
-  LoRaSerial.write((const char*)soloData, sizeSoloData);
-  Serial.println("\n\n");
-}
-
-void receive(AllPacketData *allData) {
-  modoReceptor();
-  LoRaSerial.readBytes((char*)allData, sizeAllData);
-}
-
 void transmitString(String string) {
   modoTransmissor();
   LoRaSerial.println(string);
@@ -60,5 +42,5 @@ void transmitString(String string) {
 
 void receiveString() {
   modoReceptor();
-  AllDados = LoRaSerial.readStringUntil('\n');
+  telemetry_message = LoRaSerial.readStringUntil('\n');
 }

@@ -30,7 +30,7 @@ void setupBMP() {
   bmp.setIIRFilterCoeff(BMP3_IIR_FILTER_COEFF_31);
   bmp.setOutputDataRate(BMP3_ODR_0_1_HZ);
 
-  delay(200);
+  delay(500);
   updateBMP();
 }
 
