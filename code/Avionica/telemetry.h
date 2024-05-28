@@ -65,8 +65,8 @@ void receiveString() {
 
 void transmit() {
   if(LORA_WAY == LORA_STRING_METHOD) {
-    // transmitString(telemetry_message);
-    transmitString(cots_message);
+    transmitString(telemetry_message);
+    // transmitString(cots_message);
   } else if(LORA_WAY == LORA_STRUCT_METHOD) {
     transmitStruct(&allData);
   }

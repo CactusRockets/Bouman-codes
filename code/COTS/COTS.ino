@@ -2,6 +2,8 @@
 #include <Wire.h>
 #include <HardwareSerial.h>
 
+#define ESP_BLUE_LED 2
+
 #define ENABLE_SERIAL true
 #define ENABLE_BMP true
 #define ENABLE_MPU true
@@ -40,6 +42,8 @@ float initial_altitude = 0;
 float beepTime = 0;
 bool isBeeping = false;
 
+bool LED_ACESO = false;
+
 #include "serial.h"
 #include "bmp.h"
 #include "imu.h"
@@ -61,8 +65,11 @@ void setup() {
 
   resetStructs();
   setupComponents();
+  pinMode(ESP_BLUE_LED, OUTPUT);
 
   initial_altitude = getAltitude();
+
+  digitalWrite(ESP_BLUE_LED, HIGH);
 }
 
 void loop() {

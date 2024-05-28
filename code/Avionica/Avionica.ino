@@ -3,8 +3,14 @@
 // import support libraries
 #include <SPI.h>
 
+#define ESP_BLUE_LED 2
+
+/*
+  WHEN ENABLE_SERIAL IS TRUE, COTS IS DISABLED 
+  BECAUSE THEY CONFLICT THE SAME SERIAL
+*/
 #define ENABLE_SERIAL true
-#define ENABLE_SD false
+#define ENABLE_SD true
 #define ENABLE_TELEMETRY true
 #define ENABLE_GPS true
 
@@ -55,6 +61,8 @@ String solo_message = "";
 float initial_altitude;
 int package_counter = 0;
 
+bool LED_ACESO = false;
+
 // import external files
 #include "serial.h"     // debug prints
 #include "telemetry.h"  // telemetria
@@ -80,19 +88,27 @@ void setup() {
   }
 
   // Inicializa sensores e configura pinos
+  print("Configurando componentes...");
   setupComponents();
-
+  print("Configuração finalizada!");
+  
   // Zera todos os valores
   resetStructs();
 
   // Liga LED do ESP32, integrado ao pino 2, como sinal que tudo iniciou corretamente
-  pinMode(2, OUTPUT);
-  digitalWrite(2, HIGH);
+  pinMode(ESP_BLUE_LED, OUTPUT);
 
+  print("Iniciando Sistema...");
   delay(1000);
 }
 
 void loop() {
+  LED_ACESO = !LED_ACESO;
+  if(LED_ACESO) {
+    digitalWrite(ESP_BLUE_LED, LOW);
+  } else {
+    digitalWrite(ESP_BLUE_LED, HIGH);
+  }
   getSensorsMeasures();
 
   // Armazena o tempo de execução
