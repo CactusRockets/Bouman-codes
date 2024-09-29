@@ -18,18 +18,6 @@ HardwareSerial LoRaSerial(2);
 int sizeAllData = sizeof(allData);
 int sizeSoloData = sizeof(soloData);
 
-void setupTelemetry() {
-
-  pinMode(M0, OUTPUT);
-  pinMode(M1, OUTPUT);
-
-  //Configuração inicial do LoRa
-  LoRaSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
-  while(!LoRaSerial);
-
-  println("LoRa conectado!");
-}
-
 void modoReceptor() {
   // Configurações para modo Receptor
   digitalWrite(M0, LOW);
@@ -38,8 +26,21 @@ void modoReceptor() {
 
 void modoTransmissor() {
   // Configurações para modo Transmissor
-  digitalWrite(M0, HIGH);
+  digitalWrite(M0, LOW);
   digitalWrite(M1, LOW);
+}
+
+void setupTelemetry() {
+
+  pinMode(M0, OUTPUT);
+  pinMode(M1, OUTPUT);
+  modoTransmissor();
+
+  //Configuração inicial do LoRa
+  LoRaSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
+  while(!LoRaSerial);
+
+  println("LoRa conectado!");
 }
 
 void transmitStruct(const PacketData* allData) {

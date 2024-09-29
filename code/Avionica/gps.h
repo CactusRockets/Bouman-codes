@@ -65,9 +65,13 @@ void getLatitudeAndLongitude() {
 void getGPSData() {
   bool isNewGPSData = false;
 
+
+
   while(GPSSerial.available() > 0) {
     char GPSData = GPSSerial.read();
     isNewGPSData = gps.encode(GPSData);
+
+    Serial.println("Dados de GPS recebidos!");
   }
 
   if(isNewGPSData) {
