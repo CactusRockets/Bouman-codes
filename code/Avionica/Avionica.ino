@@ -4,6 +4,7 @@
 #include <SPI.h>
 
 #define ESP_BLUE_LED 2
+#define BUZZER_PIN 
 
 /*
   WHEN ENABLE_SERIAL IS TRUE, COTS IS DISABLED 
@@ -205,7 +206,7 @@ String telemetryMessage(){
   // P -> Estado do Paraquedas
   // T -> Latitude do GPS
   // G -> Longitude do GPS
-  // Ex.: PPPPPSAAAAAASCCCCWWWXXXYYYZZZPSTTTTTSGGGGG
+  // Formato : PPPPPSAAAAAASCCCCSWWWSXXXSYYYSZZZPSTTTTTSGGGGG
   
   String packetString = fixNumberSize(package_counter, 5) + cots_message;
     
@@ -228,7 +229,7 @@ String sdMessage(){
   // P -> Estado do Paraquedas
   // T -> Latitude do GPS
   // G -> Longitude do GPS
-  // Ex.: PPPPPSAAAAAASCCCCWWWXXXYYYZZZPSTTTTTSGGGGG
+  // Formato : PPPPPSAAAAAASCCCCSWWWSXXXSYYYSZZZPSTTTTTSGGGGG
   
   String packetString = fixNumberSize(package_counter, 5) + cots_message;
     

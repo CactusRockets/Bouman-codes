@@ -45,10 +45,10 @@ bool isBeeping = false;
 bool LED_ACESO = false;
 
 #include "serial.h"
+#include "buzzer.h"
 #include "bmp.h"
 #include "imu.h"
 #include "parachute.h"
-#include "buzzer.h"
 
 HardwareSerial CotsSerial(2);
 
@@ -70,6 +70,55 @@ void setup() {
   initial_altitude = getAltitude();
 
   digitalWrite(ESP_BLUE_LED, HIGH);
+  setupBuzzer();
+  tripleBuzzerBip();
+}
+
+int extractNumber(String numberText, int width, bool considerSignal=false) {
+  int slicePosition = 1;
+  while (numberText[slicePosition] == '0' && slicePosition < width) {
+    slicePosition++;
+  }
+
+  String slicedNumber = numberText.substring(slicePosition, width);
+
+  int realNumber = slicedNumber.toInt();
+
+  if (!considerSignal) return realNumber;
+  else {
+    if (numberText[0] == '+') {
+      return realNumber;
+    }
+    if (numberText[0] == '-') {
+      return -1*realNumber;
+    }
+  }
+}
+
+void decodeMessage(String message) {
+  //int package = extractNumber(message.substring(0, 5), 5);
+  float altitude = 0.001 * extractNumber(message.substring(0, 7), 7, true);
+  float accel_z = 0.01 * extractNumber(message.substring(7, 12), 5, true);
+  float quaternion_w = 0.01 * extractNumber(message.substring(12, 16), 4, true);
+  float quaternion_x = 0.01 * extractNumber(message.substring(16, 20), 4, true);
+  float quaternion_y = 0.01 * extractNumber(message.substring(20, 24), 4, true);
+  float quaternion_z = 0.01 * extractNumber(message.substring(24, 28), 4, true);
+  int parachute = extractNumber(message.substring(28, 29), 1) == 0;
+  //float latitude = 0.001 * extractNumber(message.substring(29, 35), 6, true);
+  //float longitude = 0.001 * extractNumber(message.substring(35, 41), 6, true);
+
+  Serial.println("-------------------------------------");
+  //Serial.println("Pacote: " + String(package));
+  Serial.println("Altitude: " + String(altitude, 3));
+  Serial.println("Aceleração em Z: " + String(accel_z, 2));
+  Serial.println("Quaternion W: " + String(quaternion_w, 2)); 
+  Serial.println("Quaternion X: " + String(quaternion_x, 2));
+  Serial.println("Quaternion Y: " + String(quaternion_y, 2));
+  Serial.println("Quaternion Z: " + String(quaternion_z, 2));
+  Serial.println("Paraquedas Ativado? : " + String(parachute));
+  //Serial.println("Latitude: " + String(latitude, 6)); 
+  //Serial.println("Longitude: " + String(longitude, 6)); 
+  Serial.println("");
 }
 
 void loop() {
@@ -81,6 +130,7 @@ void loop() {
   }
 
   Serial.println(cots_message);
+  decodeMessage(cots_message);
   CotsSerial.println(cots_message);
 }
 

@@ -15,3 +15,27 @@ void activateBuzzer() {
 void desactivateBuzzer() {
   digitalWrite(BUZZER_PIN, LOW);
 }
+
+void tripleBuzzerBip() {
+  activateBuzzer();
+  delay(BEEP_TIME);
+  desactivateBuzzer();
+  delay(BEEP_TIME);
+
+  activateBuzzer();
+  delay(BEEP_TIME);
+  desactivateBuzzer();
+  delay(BEEP_TIME);
+  
+  activateBuzzer();
+  delay(BEEP_TIME);
+  desactivateBuzzer();
+  delay(BEEP_TIME);
+}
+
+void longBuzzer() {
+  activateBuzzer();
+  delay(100);
+  desactivateBuzzer();
+  delay(100);
+}
