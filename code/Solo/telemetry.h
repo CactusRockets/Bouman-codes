@@ -13,37 +13,43 @@ HardwareSerial LoRaSerial(2);
 
 String telemetry_message = "";
 
-void modoReceptor() {
+void modoReceptor()
+{
   // Configurações para modo Receptor
   digitalWrite(M0, LOW);
   digitalWrite(M1, LOW);
 }
 
-void modoTransmissor() {
+void modoTransmissor()
+{
   // Configurações para modo Transmissor
   digitalWrite(M0, LOW);
   digitalWrite(M1, LOW);
 }
 
-void setupTelemetry() {
+void setupTelemetry()
+{
 
   pinMode(M0, OUTPUT);
   pinMode(M1, OUTPUT);
   modoReceptor();
 
-  //Configuração inicial do LoRa
+  // Configuração inicial do LoRa
   LoRaSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
-  while(!LoRaSerial);
+  while (!LoRaSerial)
+    ;
 
   Serial.println("LoRa conectado!");
 }
 
-void transmitString(String string) {
+void transmitString(String string)
+{
   modoTransmissor();
   LoRaSerial.println(string);
 }
 
-void receiveString() {
+void receiveString()
+{
   modoReceptor();
   telemetry_message = LoRaSerial.readStringUntil('\n');
 }

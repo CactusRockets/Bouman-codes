@@ -2,16 +2,16 @@
 
 #define SKIB1 13
 #define SKIB2 12
-#define RANGE_FALL_DETECTION 10
+#define RANGE_FALL_DETECTION 2
 
 // Em ms
 #define TIME_BETWEEN_ACTIVATIONS 8000
 
 // Em metros
-#define GAP_BETWEEN_ACTIVATIONS 150
+#define GAP_BETWEEN_ACTIVATIONS 2
 
 // Em metros
-#define HEIGHT_FOR_2_STAGE 500
+#define HEIGHT_FOR_2_STAGE 3
 
 // Em millisegundos
 #define SKIB_TIME 250
@@ -63,21 +63,21 @@ void deactivateStage2() {
 }
 
 void activateParachutes() {
-  if((maximumAltitudeValue - initial_altitude) > (HEIGHT_FOR_2_STAGE + GAP_BETWEEN_ACTIVATIONS)) {
+  bool activate_by_height = true;
+
+  if (maximumAltitudeValue > altitudeAtual + RANGE_FALL_DETECTION) {
     if(parachute1Activated == false) {
       activateStage1();
     }
 
+    activate_by_height = ((maximumAltitudeValue - initial_altitude) > HEIGHT_FOR_2_STAGE);
+  }
+
+  if (activate_by_height){
     if((altitudeAtual - initial_altitude) <= HEIGHT_FOR_2_STAGE) {
       activateStage2();
     }
-  }
-
-  if((maximumAltitudeValue - initial_altitude) <= HEIGHT_FOR_2_STAGE) {
-    if(parachute1Activated == false) {
-      activateStage1();
-    }
-
+  } else {
     if(parachute1Activated && parachute2Activated == false && 
       (millis() - timeForStage1) > TIME_BETWEEN_ACTIVATIONS) {
         activateStage2();

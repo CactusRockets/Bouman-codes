@@ -103,7 +103,7 @@ void decodeMessage(String message) {
   float quaternion_x = 0.01 * extractNumber(message.substring(16, 20), 4, true);
   float quaternion_y = 0.01 * extractNumber(message.substring(20, 24), 4, true);
   float quaternion_z = 0.01 * extractNumber(message.substring(24, 28), 4, true);
-  int parachute = extractNumber(message.substring(28, 29), 1) == 0;
+  int parachute = extractNumber(message.substring(28, 29), 1);
   //float latitude = 0.001 * extractNumber(message.substring(29, 35), 6, true);
   //float longitude = 0.001 * extractNumber(message.substring(35, 41), 6, true);
 
@@ -115,7 +115,7 @@ void decodeMessage(String message) {
   Serial.println("Quaternion X: " + String(quaternion_x, 2));
   Serial.println("Quaternion Y: " + String(quaternion_y, 2));
   Serial.println("Quaternion Z: " + String(quaternion_z, 2));
-  Serial.println("Paraquedas Ativado? : " + String(parachute));
+  Serial.println("Paraquedas : " + String(parachute));
   //Serial.println("Latitude: " + String(latitude, 6)); 
   //Serial.println("Longitude: " + String(longitude, 6)); 
   Serial.println("");
@@ -132,6 +132,9 @@ void loop() {
   Serial.println(cots_message);
   decodeMessage(cots_message);
   CotsSerial.println(cots_message);
+  activateStage1();
+  delay(500);
+  activateStage2();
 }
 
 void setupComponents() {
