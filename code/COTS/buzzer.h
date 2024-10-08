@@ -1,11 +1,9 @@
-/* CONFIGURAÇÕES BUZZER */
-
 #define BUZZER_PIN 14
 #define BEEP_TIME 300
 
 void setupBuzzer() {
   pinMode(BUZZER_PIN, OUTPUT);
-  println("Buzzer configurado!");
+  Serial.println("Buzzer configurado!");
 }
 
 void activateBuzzer() {
@@ -33,9 +31,3 @@ void tripleBuzzerBip() {
   delay(BEEP_TIME);
 }
 
-void longBuzzer() {
-  activateBuzzer();
-  delay(100);
-  desactivateBuzzer();
-  delay(100);
-}

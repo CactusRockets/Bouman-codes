@@ -1,5 +1,3 @@
-/* CONFIGURAÇÕES SKIBS */
-
 #define SKIB1 13
 #define SKIB2 12
 #define RANGE_FALL_DETECTION 2
@@ -27,7 +25,7 @@ double timeForStage2 = 0;
 void setupSkibPins() {
   pinMode(SKIB1, OUTPUT);
   pinMode(SKIB2, OUTPUT);
-  println("Skibs configurados!");
+  Serial.println("Skibs configurados!");
 }
 
 void analyzeStateOfRocket() {
@@ -38,7 +36,7 @@ void analyzeStateOfRocket() {
 
 void activateStage1() {
   digitalWrite(SKIB1, HIGH);
-  println("1 Skib ativado!");
+  Serial.println("1 Skib ativado!");
 
   timeForStage1 = millis();
   parachute1Activated = true;
@@ -46,7 +44,7 @@ void activateStage1() {
 
 void activateStage2() {
   digitalWrite(SKIB2, HIGH);
-  println("2 Skib ativado!");
+  Serial.println("2 Skib ativado!");
 
   timeForStage2 = millis();
   parachute2Activated = true;
@@ -54,47 +52,51 @@ void activateStage2() {
 
 void deactivateStage1() {
   digitalWrite(SKIB1, LOW);
-  println("1 Skib desativado!");
+  Serial.println("1 Skib desativado!");
 }
 
 void deactivateStage2() {
   digitalWrite(SKIB2, LOW);
-  println("2 Skib desativado!");
+  Serial.println("2 Skib desativado!");
 }
 
 void activateParachutes() {
   bool activate_by_height = true;
 
-  if (maximumAltitudeValue > altitudeAtual + RANGE_FALL_DETECTION) {
+  if ((maximumAltitudeValue - altitudeAtual) > RANGE_FALL_DETECTION) {
     if(parachute1Activated == false) {
       activateStage1();
     }
 
-    activate_by_height = ((maximumAltitudeValue - initial_altitude) > HEIGHT_FOR_2_STAGE);
+    activate_by_height = (maximumAltitudeValue > HEIGHT_FOR_2_STAGE);
   }
 
   if (activate_by_height){
-    if((altitudeAtual - initial_altitude) <= HEIGHT_FOR_2_STAGE) {
+    if(altitudeAtual <= HEIGHT_FOR_2_STAGE) {
       activateStage2();
     }
   } else {
-    if(parachute1Activated && parachute2Activated == false && 
-      (millis() - timeForStage1) > TIME_BETWEEN_ACTIVATIONS) {
+    if(
+      parachute1Activated 
+      && parachute2Activated == false 
+      && (millis() - timeForStage1) > TIME_BETWEEN_ACTIVATIONS
+    ) {
         activateStage2();
     }
   }
 
-  if(parachute1Activated && millis() - timeForStage1 >= SKIB_TIME) {
+  if(parachute1Activated && (millis() - timeForStage1) >= SKIB_TIME) {
     deactivateStage1();
   }
 
-  if(parachute2Activated && millis() - timeForStage2 >= SKIB_TIME) {
+  if(parachute2Activated && (millis() - timeForStage2) >= SKIB_TIME) {
     deactivateStage2();
   }
 }
 
 void checkApogee() {
   analyzeStateOfRocket();
+
   if(ENABLE_SKIBS) {
     if(isDropping) {
       activateParachutes();
@@ -109,3 +111,4 @@ void checkApogee() {
     allData.parachute = 2;
   }
 }
+
