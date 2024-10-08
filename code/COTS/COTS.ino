@@ -11,7 +11,7 @@
 #define ENABLE_SERIAL false
 #define ENABLE_BMP true
 #define ENABLE_MPU false
-#define ENABLE_SKIBS false
+#define ENABLE_SKIBS true
 #define ENABLE_BUZZER false
 
 struct BmpData {
@@ -59,8 +59,8 @@ void setup() {
 
   resetStructs();
   setupComponents();
-  getInitialAltitude();
 
+  getInitialAltitude();
   digitalWrite(ESP_BLUE_LED, HIGH);
   tripleBuzzerBip();
 }
@@ -68,7 +68,6 @@ void setup() {
 void loop() {
   getSensorsMeasures();
   saveMessage();
-
   decodeMessage(cots_message);
   CotsSerial.println(cots_message);
 
@@ -76,7 +75,7 @@ void loop() {
 
   // Print dos dados
   Serial.print("Initial altitude: ");
-  Serial.println(initial_altitude);
+  Serial.println(initialAltitude);
   Serial.print("Altitude: ");
   Serial.println(allData.bmpData.altitude);
   Serial.print("Temperature: ");

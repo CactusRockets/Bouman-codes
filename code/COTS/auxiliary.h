@@ -72,6 +72,8 @@ void saveMessage() {
     + fixNumberSize((int) (allData.imuData.quaternion_y*100), 3, true)
     + fixNumberSize((int) (allData.imuData.quaternion_z*100), 3, true)
     + String(allData.parachute);
+
+  Serial.println(cots_message);
 }
 
 // void beepIntermitating() {

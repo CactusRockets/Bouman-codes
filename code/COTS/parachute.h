@@ -1,6 +1,6 @@
 #define SKIB1 13
 #define SKIB2 12
-#define RANGE_FALL_DETECTION 2
+#define RANGE_FALL_DETECTION 1
 
 // Em ms
 #define TIME_BETWEEN_ACTIVATIONS 8000
@@ -9,7 +9,7 @@
 #define GAP_BETWEEN_ACTIVATIONS 2
 
 // Em metros
-#define HEIGHT_FOR_2_STAGE 3
+#define HEIGHT_FOR_2_STAGE 1
 
 // Em millisegundos
 #define SKIB_TIME 250

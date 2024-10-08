@@ -11,7 +11,7 @@ Adafruit_BMP3XX bmp;
 float maximumAltitudeValue = 0;
 float altitudeAtual = 0;
 
-float initial_altitude = 0;
+float initialAltitude = 0;
 int altitudeReadQuantity = 5;
 
 void updateBMP() {
@@ -25,7 +25,7 @@ void getInitialAltitude() {
   int i = 0;
   for(i = 0; i < altitudeReadQuantity; i++) {
     updateBMP();
-    initial_altitude = bmp.readAltitude(SEA_LOCAL_PRESSURE);
+    initialAltitude = bmp.readAltitude(SEA_LOCAL_PRESSURE);
   }
 }
 
@@ -55,7 +55,7 @@ void readBMP() {
 
   allData.bmpData.temperature = bmp.temperature;
   allData.bmpData.pressure = bmp.pressure;
-  allData.bmpData.altitude = bmp.readAltitude(SEA_LOCAL_PRESSURE) - initial_altitude;
+  allData.bmpData.altitude = bmp.readAltitude(SEA_LOCAL_PRESSURE) - initialAltitude;
 
   altitudeAtual = allData.bmpData.altitude;
 
