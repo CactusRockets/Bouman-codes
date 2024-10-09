@@ -8,10 +8,12 @@ void setupBuzzer() {
 
 void activateBuzzer() {
   digitalWrite(BUZZER_PIN, HIGH);
+  Serial.println("Buzzer ativado!");
 }
 
 void desactivateBuzzer() {
   digitalWrite(BUZZER_PIN, LOW);
+  Serial.println("Buzzer desativado!");
 }
 
 void tripleBuzzerBip() {

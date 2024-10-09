@@ -12,7 +12,7 @@
 #define HEIGHT_FOR_2_STAGE 1
 
 // Em millisegundos
-#define SKIB_TIME 250
+#define SKIB_TIME 1000
 
 bool isDropping = false;
 
@@ -40,6 +40,7 @@ void activateStage1() {
 
   timeForStage1 = millis();
   parachute1Activated = true;
+  activateBuzzer();
 }
 
 void activateStage2() {
@@ -48,16 +49,19 @@ void activateStage2() {
 
   timeForStage2 = millis();
   parachute2Activated = true;
+  activateBuzzer();
 }
 
 void deactivateStage1() {
   digitalWrite(SKIB1, LOW);
   Serial.println("1 Skib desativado!");
+  desactivateBuzzer();
 }
 
 void deactivateStage2() {
   digitalWrite(SKIB2, LOW);
   Serial.println("2 Skib desativado!");
+  desactivateBuzzer();
 }
 
 void activateParachutes() {
@@ -112,3 +116,15 @@ void checkApogee() {
   }
 }
 
+void testActivations(int millisStage1, int millisStage2) {
+  Serial.println(millis());
+  if(millis() > millisStage1 && parachute1Activated == false) {
+    activateStage1();
+    delay(SKIB_TIME);
+    deactivateStage1();
+  } else if(millis() > millisStage2  && parachute2Activated == false) {
+    activateStage2();
+    delay(SKIB_TIME);
+    deactivateStage2();
+  }
+}

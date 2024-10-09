@@ -45,6 +45,18 @@ void decodeMessage(String message) {
   // Serial.println("");
 }
 
+void printData() {
+  Serial.print("Initial altitude: ");
+  Serial.println(initialAltitude);
+  Serial.print("Altitude: ");
+  Serial.println(allData.bmpData.altitude);
+  Serial.print("Temperature: ");
+  Serial.println(allData.bmpData.temperature);
+  Serial.print("Pressure: ");
+  Serial.println(allData.bmpData.pressure);
+  Serial.println("");
+}
+
 String fixNumberSize(int num, int width, bool enableSignal=false){
   int numPositive = (num >= 0 ? num : -num);
   String formattedString = String(numPositive);

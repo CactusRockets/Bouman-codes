@@ -12,7 +12,7 @@
 #define ENABLE_BMP true
 #define ENABLE_MPU false
 #define ENABLE_SKIBS true
-#define ENABLE_BUZZER false
+#define ENABLE_BUZZER true
 
 struct BmpData {
   float temperature;
@@ -72,17 +72,9 @@ void loop() {
   CotsSerial.println(cots_message);
 
   checkApogee();
+  testActivations(20000, 40000);
 
-  // Print dos dados
-  Serial.print("Initial altitude: ");
-  Serial.println(initialAltitude);
-  Serial.print("Altitude: ");
-  Serial.println(allData.bmpData.altitude);
-  Serial.print("Temperature: ");
-  Serial.println(allData.bmpData.temperature);
-  Serial.print("Pressure: ");
-  Serial.println(allData.bmpData.pressure);
-  Serial.println("");
+  printData();
 
   delay(500);
 }
