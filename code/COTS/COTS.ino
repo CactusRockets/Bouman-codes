@@ -3,6 +3,8 @@
 #include <Adafruit_BMP3XX.h>
 #include <HardwareSerial.h>
 
+#define DEBUG true
+
 #define ESP_BLUE_LED 2
 
 #define RX2_PIN 16
@@ -75,7 +77,7 @@ void loop() {
 
   checkApogee();
 
-  printData();
+  // printData();
 
   delay(500);
 }

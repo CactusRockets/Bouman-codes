@@ -16,7 +16,7 @@ int altitudeReadQuantity = 5;
 
 void updateBMP() {
   if (!bmp.performReading()) {
-    Serial.println("Failed to read BMP");
+    if (DEBUG) Serial.println("Failed to read BMP");
     return;
   }
 }
@@ -31,10 +31,10 @@ void getInitialAltitude() {
 
 void setupBMP() {
   if(!bmp.begin_I2C(BMP_ADDRESS)) {
-    Serial.println("Failed to find BMP390 chip");
+    if (DEBUG) Serial.println("Failed to find BMP390 chip");
     while(1);
   }
-  Serial.println("BMP390 conectado!");
+  if (DEBUG) Serial.println("BMP390 conectado!");
 
   // bmp.setTemperatureOversampling(BMP3_OVERSAMPLING_4X);
   // bmp.setPressureOversampling(BMP3_OVERSAMPLING_8X);
