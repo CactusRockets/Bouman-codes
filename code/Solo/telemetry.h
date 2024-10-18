@@ -12,6 +12,7 @@
 HardwareSerial LoRaSerial(2);
 
 String telemetry_message = "";
+#define TELEMETRY_MESSAGE_LENGTH 46
 
 void modoReceptor()
 {
@@ -51,5 +52,8 @@ void transmitString(String string)
 void receiveString()
 {
   modoReceptor();
-  telemetry_message = LoRaSerial.readStringUntil('\n');
+  String new_message = LoRaSerial.readStringUntil('\n');
+  if (new_message.length() >= 46){
+    telemetry_message = new_message;
+  }
 }

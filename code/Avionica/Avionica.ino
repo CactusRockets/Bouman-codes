@@ -11,7 +11,7 @@
   BECAUSE THEY CONFLICT THE SAME SERIAL
 */
 #define ENABLE_SERIAL false
-#define ENABLE_SD true
+#define ENABLE_SD false
 #define ENABLE_TELEMETRY true
 #define ENABLE_GPS true
 
@@ -130,7 +130,7 @@ void loop() {
     }
   }
 
-  delay(500);
+  delay(1250);
 }
 
 void setupComponents() {

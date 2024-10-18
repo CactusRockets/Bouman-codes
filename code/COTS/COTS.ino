@@ -3,14 +3,16 @@
 #include <Adafruit_BMP3XX.h>
 #include <HardwareSerial.h>
 
+#define DEBUG true
+
 #define ESP_BLUE_LED 2
 
 #define RX2_PIN 16
 #define TX2_PIN 17
 
-#define ENABLE_SERIAL false
+#define ENABLE_SERIAL true
 #define ENABLE_BMP true
-#define ENABLE_MPU false
+#define ENABLE_MPU true
 #define ENABLE_SKIBS true
 #define ENABLE_BUZZER true
 
@@ -72,9 +74,9 @@ void loop() {
   CotsSerial.println(cots_message);
 
   checkApogee();
-  testActivations(20000, 40000);
+  // testActivations(20000, 40000);
 
-  printData();
+  // printData();
 
   delay(500);
 }

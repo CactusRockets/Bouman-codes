@@ -1,11 +1,14 @@
 #include "auxiliary.h"
 
+float maxVelocity = 0;
+float maxAcceleration = 0;
+float maxAltitude = 0;
+
 class DataFlight
 {
 private:
     int package;
     float altitude;
-    float maximumAltitude;
     float accelerationZ;
     float quaternionW;
     float quaternionX;
@@ -20,20 +23,21 @@ private:
     float velocityX;
     float velocityY;
     float velocityZ;
-    float maximumVelocity;
     float acceleration;
     float accelerationX;
     float accelerationY;
-    float maximumAcceleration;
+    // float maximumAltitude;
+    // float maximumVelocity;
+    // float maximumAcceleration;
 
 public:
     // Construtor padrão
     DataFlight()
-        : package(0), altitude(0.0), maximumAltitude(0.0), accelerationZ(0.0),
-          quaternionW(1.0), quaternionX(0.0), quaternionY(0.0), quaternionZ(0.0),
-          parachute(0), latitude(0.0), longitude(0.0), velocity(0.0), velocityX(0.0),
-          velocityY(0.0), velocityZ(0.0), maximumVelocity(0.0), acceleration(0.0),
-          accelerationX(0.0), accelerationY(0.0), maximumAcceleration(0.0) {}
+        : package(0), altitude(0.0), accelerationZ(0.0), quaternionW(1.0), 
+          quaternionX(0.0), quaternionY(0.0), quaternionZ(0.0), parachute(0), 
+          latitude(0.0), longitude(0.0), velocity(0.0), velocityX(0.0),
+          velocityY(0.0), velocityZ(0.0), acceleration(0.0), accelerationX(0.0), 
+          accelerationY(0.0) {}
 
     // Construtor com parâmetros
     DataFlight(String message)
@@ -45,14 +49,11 @@ public:
         quaternionX = 0.01 * extractNumber(message.substring(21, 25), 4, true);
         quaternionY = 0.01 * extractNumber(message.substring(25, 29), 4, true);
         quaternionZ = 0.01 * extractNumber(message.substring(29, 33), 4, true);
-        parachute = extractNumber(message.substring(33, 34), 1);
-        skib1 = parachute > 0;
-        skib2 = parachute > 1;
-        latitude = 0.001 * extractNumber(message.substring(34, 40), 6, true);
-        longitude = 0.001 * extractNumber(message.substring(40, 46), 6, true);
-        maximumVelocity = 0;
-        maximumAcceleration = 0;
-        maximumAltitude = 0;
+        parachute = message.substring(33, 34).toInt(); 
+        skib1 = (parachute > 0);
+        skib2 = (parachute > 1);
+        latitude = 0.001 * extractNumber(message.substring(34, 41), 6, true);
+        longitude = 0.001 * extractNumber(message.substring(41, 47), 6, true);
 
         // Valores default que precisam mudar no futuro
         velocity = 1;
@@ -67,7 +68,6 @@ public:
     // Getters
     int getPackage() const { return package; }
     float getAltitude() const { return altitude; }
-    float getMaximumAltitude() const { return maximumAltitude; }
     float getAccelerationZ() const { return accelerationZ; }
     float getQuaternionW() const { return quaternionW; }
     float getQuaternionX() const { return quaternionX; }
@@ -82,11 +82,27 @@ public:
     float getVelocityX() const { return velocityX; }
     float getVelocityY() const { return velocityY; }
     float getVelocityZ() const { return velocityZ; }
-    float getMaximumVelocity() const { return maximumVelocity; }
     float getAcceleration() const { return acceleration; }
     float getAccelerationX() const { return accelerationX; }
     float getAccelerationY() const { return accelerationY; }
-    float getMaximumAcceleration() const { return maximumAcceleration; }
+    float getMaximumAltitude() { 
+      if (altitude > maxAltitude) {
+        maxAltitude = altitude;
+      }
+      return maxAltitude; 
+    }
+    float getMaximumAcceleration() { 
+      if (acceleration > maxAcceleration){ 
+        maxAcceleration = acceleration;
+      }
+      return maxAcceleration; 
+    }
+    float getMaximumVelocity() { 
+      if (velocity > maxVelocity) {
+        maxVelocity = velocity;
+      }
+      return maxVelocity; 
+    }
 
     // Setters
     void setPackage(int pkg) { package = pkg; }
@@ -107,18 +123,18 @@ public:
     void setAccelerationX(float accX) { accelerationX = accX; }
     void setAccelerationY(float accY) { accelerationY = accY; }
     void setMaximumVelocity(float vel) { 
-      if (vel > maximumVelocity) {
-        maximumVelocity = vel;
+      if (vel > maxVelocity) {
+        maxVelocity = vel;
       }
     }
     void setMaximumAcceleration(float acc) { 
-      if (acc > maximumAcceleration) {
-        maximumAcceleration = acc;
+      if (acc > maxAcceleration) {
+        maxAcceleration = acc;
       }
     }
     void setMaximumAltitude(float alt) { 
-      if (alt > maximumAltitude) {
-        maximumAltitude = alt;
+      if (alt > maxAltitude) {
+        maxAltitude = alt;
       } 
     }
 };
