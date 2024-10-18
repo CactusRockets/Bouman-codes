@@ -8,9 +8,8 @@
 #define RX2_PIN 16
 #define TX2_PIN 17
 
-#define ENABLE_SERIAL false
 #define ENABLE_BMP true
-#define ENABLE_MPU false
+#define ENABLE_MPU true
 #define ENABLE_SKIBS true
 #define ENABLE_BUZZER true
 
@@ -52,6 +51,9 @@ HardwareSerial CotsSerial(2);
 
 void setup() {
 
+  Wire.begin();
+  Wire.setClock(400000);
+
   Serial.begin(9600);
   CotsSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
 
@@ -72,7 +74,6 @@ void loop() {
   CotsSerial.println(cots_message);
 
   checkApogee();
-  testActivations(20000, 40000);
 
   printData();
 
