@@ -9,7 +9,7 @@
 #define HEIGHT_FOR_2_STAGE 3
 
 // Em millisegundos
-#define SKIB_TIME 1000
+#define SKIB_TIME 2000
 
 bool isDropping = false;
 bool enoughHeight = true;

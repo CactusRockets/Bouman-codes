@@ -37,8 +37,7 @@ void setupTelemetry()
 
   // Configuração inicial do LoRa
   LoRaSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
-  while (!LoRaSerial)
-    ;
+  while (!LoRaSerial);
 
   Serial.println("LoRa conectado!");
 }
