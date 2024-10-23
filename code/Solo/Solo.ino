@@ -10,6 +10,7 @@
 
 int valueButton;
 String solo_message = "";
+DataFlight data = DataFlight();
 
 void setup()
 {
@@ -27,7 +28,7 @@ void setup()
 
 void loop()
 {
-  telemetry_message.clear();
+  // telemetry_message.clear();
 
   if (LoRaSerial.available() > 0)
   {
@@ -49,7 +50,10 @@ void loop()
     // Longitude -> próximos 6 dígitos COM sinal
 
     debugMessage(telemetry_message);
+    // debugMessageString(telemetry_message);
 
+    Serial.println("Mensagem Recebida: ");
+    Serial.println(telemetry_message);
     Serial.print("Número de Conexões: ");
     Serial.println(ws.count());
 
@@ -57,7 +61,10 @@ void loop()
     {
       StaticJsonDocument<500> doc;
 
-      DataFlight data = DataFlight(telemetry_message);
+      data = DataFlight(telemetry_message);
+
+      Serial.println(data.getAltitude());
+      Serial.print(data.getMaximumAltitude());
 
       doc["package"] = data.getPackage();
       doc["altitude"] = data.getAltitude();
@@ -81,10 +88,6 @@ void loop()
       doc["accelerationY"] = data.getAccelerationY();
       doc["maximumAltitude"] = data.getMaximumAltitude();
 
-      data.setMaximumAltitude(data.getAltitude());
-      data.setMaximumAcceleration(data.getAcceleration());
-      data.setMaximumVelocity(data.getVelocity());
-
       counter++;
       tempo = tempo + 0.01;
       if (counter > 31)
@@ -96,6 +99,6 @@ void loop()
       Serial.print("Enviando dados: ");
       Serial.println(json);
     }
-    delay(500);
+    delay(20);
   }
 }

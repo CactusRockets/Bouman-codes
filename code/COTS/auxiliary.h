@@ -31,30 +31,30 @@ void decodeMessage(String message) {
   // float latitude = 0.001 * extractNumber(message.substring(29, 35), 6, true);
   // float longitude = 0.001 * extractNumber(message.substring(35, 41), 6, true);
 
-  // Serial.println("-------------------------------------");
-  // Serial.println("Pacote: " + String(package));
-  // Serial.println("Altitude: " + String(altitude, 3));
-  // Serial.println("Aceleração em Z: " + String(accel_z, 2));
-  // Serial.println("Quaternion W: " + String(quaternion_w, 2)); 
-  // Serial.println("Quaternion X: " + String(quaternion_x, 2));
-  // Serial.println("Quaternion Y: " + String(quaternion_y, 2));
-  // Serial.println("Quaternion Z: " + String(quaternion_z, 2));
-  // Serial.println("Paraquedas : " + String(parachute));
-  // Serial.println("Latitude: " + String(latitude, 6)); 
-  // Serial.println("Longitude: " + String(longitude, 6)); 
-  // Serial.println("");
+  // if (DEBUG) Serial.println("-------------------------------------");
+  // if (DEBUG) Serial.println("Pacote: " + String(package));
+  // if (DEBUG) Serial.println("Altitude: " + String(altitude, 3));
+  // if (DEBUG) Serial.println("Aceleração em Z: " + String(accel_z, 2));
+  // if (DEBUG) Serial.println("Quaternion W: " + String(quaternion_w, 2)); 
+  // if (DEBUG) Serial.println("Quaternion X: " + String(quaternion_x, 2));
+  // if (DEBUG) Serial.println("Quaternion Y: " + String(quaternion_y, 2));
+  // if (DEBUG) Serial.println("Quaternion Z: " + String(quaternion_z, 2));
+  // if (DEBUG) Serial.println("Paraquedas : " + String(parachute));
+  // if (DEBUG) Serial.println("Latitude: " + String(latitude, 6)); 
+  // if (DEBUG) Serial.println("Longitude: " + String(longitude, 6)); 
+  // if (DEBUG) Serial.println("");
 }
 
 void printData() {
-  Serial.print("Initial altitude: ");
-  Serial.println(initialAltitude);
-  Serial.print("Altitude: ");
-  Serial.println(allData.bmpData.altitude);
-  Serial.print("Temperature: ");
-  Serial.println(allData.bmpData.temperature);
-  Serial.print("Pressure: ");
-  Serial.println(allData.bmpData.pressure);
-  Serial.println("");
+  if (DEBUG) Serial.print("Initial altitude: ");
+  if (DEBUG) Serial.println(initialAltitude);
+  if (DEBUG) Serial.print("Altitude: ");
+  if (DEBUG) Serial.println(allData.bmpData.altitude);
+  if (DEBUG) Serial.print("Temperature: ");
+  if (DEBUG) Serial.println(allData.bmpData.temperature);
+  if (DEBUG) Serial.print("Pressure: ");
+  if (DEBUG) Serial.println(allData.bmpData.pressure);
+  if (DEBUG) Serial.println("");
 }
 
 String fixNumberSize(int num, int width, bool enableSignal=false){
@@ -85,7 +85,7 @@ void saveMessage() {
     + fixNumberSize((int) (allData.imuData.quaternion_z*100), 3, true)
     + String(allData.parachute);
 
-  Serial.println(cots_message);
+  if (DEBUG) Serial.println(cots_message);
 }
 
 // void beepIntermitating() {

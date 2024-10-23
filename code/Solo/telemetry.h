@@ -12,6 +12,7 @@
 HardwareSerial LoRaSerial(2);
 
 String telemetry_message = "";
+#define TELEMETRY_MESSAGE_LENGTH 46
 
 void modoReceptor()
 {
@@ -36,8 +37,7 @@ void setupTelemetry()
 
   // Configuração inicial do LoRa
   LoRaSerial.begin(9600, SERIAL_8N1, RX2_PIN, TX2_PIN);
-  while (!LoRaSerial)
-    ;
+  while (!LoRaSerial);
 
   Serial.println("LoRa conectado!");
 }
@@ -51,5 +51,8 @@ void transmitString(String string)
 void receiveString()
 {
   modoReceptor();
-  telemetry_message = LoRaSerial.readStringUntil('\n');
+  String new_message = LoRaSerial.readStringUntil('\n');
+  if (new_message.length() >= 46){
+    telemetry_message = new_message;
+  }
 }

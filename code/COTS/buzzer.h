@@ -3,17 +3,17 @@
 
 void setupBuzzer() {
   pinMode(BUZZER_PIN, OUTPUT);
-  Serial.println("Buzzer configurado!");
+  if (DEBUG) Serial.println("Buzzer configurado!");
 }
 
 void activateBuzzer() {
   digitalWrite(BUZZER_PIN, HIGH);
-  Serial.println("Buzzer ativado!");
+  if (DEBUG) Serial.println("Buzzer ativado!");
 }
 
 void desactivateBuzzer() {
   digitalWrite(BUZZER_PIN, LOW);
-  Serial.println("Buzzer desativado!");
+  if (DEBUG) Serial.println("Buzzer desativado!");
 }
 
 void tripleBuzzerBip() {
