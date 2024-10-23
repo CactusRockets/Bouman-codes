@@ -69,7 +69,7 @@ bool LED_ACESO = false;
 #include "telemetry.h"  // telemetria
 #include "moduleSD.h"   // armazenamento SD
 #include "gps.h"        // localizacao gps
-#include "cots.h"        // cots
+#include "cots.h"       // cots
 
 void setupComponents();
 void getSensorsMeasures();
@@ -120,7 +120,7 @@ void loop() {
   println(telemetry_message);
 
   if(ENABLE_SD) {
-    writeOnSD(sd_message);
+    writeOnSD(telemetry_message);
   }
 
   if(ENABLE_TELEMETRY) {
