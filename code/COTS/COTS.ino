@@ -15,6 +15,9 @@
 #define ENABLE_SKIBS true
 #define ENABLE_BUZZER true
 
+bool setupMPUFlag = false;
+bool LED_STATE = false;
+
 struct BmpData {
   float temperature;
   float pressure;
@@ -51,6 +54,24 @@ HardwareSerial CotsSerial(2);
 #include "setups.h"
 #include "auxiliary.h"
 
+void flash_up()
+{
+  digitalWrite(ESP_BLUE_LED, HIGH);
+}
+
+void flash_down()
+{
+  digitalWrite(ESP_BLUE_LED, LOW);
+}
+
+void blink(bool state) {
+  if(state) {
+    flash_up();
+  } else {
+    flash_down();
+  }
+}
+
 void setup() {
 
   Wire.begin();
@@ -70,6 +91,8 @@ void setup() {
 }
 
 void loop() {
+  LED_STATE = !LED_STATE;
+  blink(LED_STATE);
   getSensorsMeasures();
   saveMessage();
   decodeMessage(cots_message);

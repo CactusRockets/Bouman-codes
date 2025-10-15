@@ -1,19 +1,20 @@
-// Avionica 1Km
+// Avionica 3Km
 
 // import support libraries
 #include <SPI.h>
 
 #define ESP_BLUE_LED 2
-#define BUZZER_PIN 
+
+#define DEBUG true
 
 /*
   WHEN ENABLE_SERIAL IS TRUE, COTS IS DISABLED 
   BECAUSE THEY CONFLICT THE SAME SERIAL
 */
-#define ENABLE_SERIAL false
+#define ENABLE_SERIAL true
 #define ENABLE_SD false
 #define ENABLE_TELEMETRY true
-#define ENABLE_GPS true
+#define ENABLE_GPS false
 
 struct AvionicData {
   float time;
@@ -62,7 +63,7 @@ String solo_message = "";
 float initial_altitude;
 int package_counter = 0;
 
-bool LED_ACESO = false;
+bool LED_STATE = false;
 
 // import external files
 #include "serial.h"     // debug prints
@@ -70,6 +71,7 @@ bool LED_ACESO = false;
 #include "moduleSD.h"   // armazenamento SD
 #include "gps.h"        // localizacao gps
 #include "cots.h"       // cots
+#include "buzzer.h"
 
 void setupComponents();
 void getSensorsMeasures();
@@ -77,6 +79,24 @@ void activateParachutes();
 void resetStructs();
 void checkApogee();
 void saveMessages();
+
+void flash_up()
+{
+  digitalWrite(ESP_BLUE_LED, HIGH);
+}
+
+void flash_down()
+{
+  digitalWrite(ESP_BLUE_LED, LOW);
+}
+
+void blink(bool state) {
+  if(state) {
+    flash_up();
+  } else {
+    flash_down();
+  }
+}
 
 void setup() {
   // Reserva espaço de memoria para as mensagens, aumentando a perfomance
@@ -98,18 +118,18 @@ void setup() {
 
   // Liga LED do ESP32, integrado ao pino 2, como sinal que tudo iniciou corretamente
   pinMode(ESP_BLUE_LED, OUTPUT);
+  setupBuzzer();
 
   print("Iniciando Sistema...");
+
+  delay(200);
+  tripleBuzzerBip();
   delay(1000);
 }
 
 void loop() {
-  LED_ACESO = !LED_ACESO;
-  if(LED_ACESO) {
-    digitalWrite(ESP_BLUE_LED, LOW);
-  } else {
-    digitalWrite(ESP_BLUE_LED, HIGH);
-  }
+  LED_STATE = !LED_STATE;
+  blink(LED_STATE);
   getSensorsMeasures();
 
   // Armazena o tempo de execução
@@ -134,7 +154,9 @@ void loop() {
 }
 
 void setupComponents() {
-  setupCots();
+  if (!ENABLE_SERIAL) {
+    setupCots();  
+  }
 
   if(ENABLE_TELEMETRY) {
     setupTelemetry();
@@ -150,7 +172,9 @@ void setupComponents() {
 }
 
 void getSensorsMeasures() {
-  readCots();
+  if (!ENABLE_SERIAL) {
+    readCots();
+  }
 
   //Medições GPS
   if(ENABLE_GPS) {
