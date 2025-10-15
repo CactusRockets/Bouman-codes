@@ -29,6 +29,7 @@ void setup()
 void loop()
 {
   // telemetry_message.clear();
+  Serial.println(LoRaSerial.available());
 
   if (LoRaSerial.available() > 0)
   {
@@ -99,6 +100,6 @@ void loop()
       Serial.print("Enviando dados: ");
       Serial.println(json);
     }
-    delay(20);
+    delay(200);
   }
 }

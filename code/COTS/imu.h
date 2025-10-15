@@ -51,52 +51,53 @@ bool is_initial_measurement = true;
 Quart quat(1, 0, 0, 0);
 
 void calibrate() {
-  if (DEBUG) Serial.println("Calibrando...");
-  if (DEBUG) Serial.println("Keep IMU level.");
+  Serial.println("Calibrando...");
+  Serial.println("Keep IMU level.");
   delay(5000);
+
   if (IMU.hasMagnetometer()) {
     IMU.calibrateMag(&calib);
   }
   IMU.calibrateAccelGyro(&calib);
-  if (DEBUG) Serial.println("Calibration done!");
-  if (DEBUG) Serial.println("Accel biases X/Y/Z: ");
-  if (DEBUG) Serial.print(calib.accelBias[0]);
-  if (DEBUG) Serial.print(", ");
-  if (DEBUG) Serial.print(calib.accelBias[1]);
-  if (DEBUG) Serial.print(", ");
-  if (DEBUG) Serial.println(calib.accelBias[2]);
-  if (DEBUG) Serial.println("Gyro biases X/Y/Z: ");
-  if (DEBUG) Serial.print(calib.gyroBias[0]);
-  if (DEBUG) Serial.print(", ");
-  if (DEBUG) Serial.print(calib.gyroBias[1]);
-  if (DEBUG) Serial.print(", ");
-  if (DEBUG) Serial.println(calib.gyroBias[2]);
+
+  Serial.println("Calibration done!");
+  Serial.println("Accel biases X/Y/Z: ");
+  Serial.print(calib.accelBias[0]);
+  Serial.print(", ");
+  Serial.print(calib.accelBias[1]);
+  Serial.print(", ");
+  Serial.println(calib.accelBias[2]);
+  Serial.println("Gyro biases X/Y/Z: ");
+  Serial.print(calib.gyroBias[0]);
+  Serial.print(", ");
+  Serial.print(calib.gyroBias[1]);
+  Serial.print(", ");
+  Serial.println(calib.gyroBias[2]);
   if (IMU.hasMagnetometer()) {
-    if (DEBUG) Serial.println("Mag biases X/Y/Z: ");
-    if (DEBUG) Serial.print(calib.magBias[0]);
-    if (DEBUG) Serial.print(", ");
-    if (DEBUG) Serial.print(calib.magBias[1]);
-    if (DEBUG) Serial.print(", ");
-    if (DEBUG) Serial.println(calib.magBias[2]);
-    if (DEBUG) Serial.println("Mag Scale X/Y/Z: ");
-    if (DEBUG) Serial.print(calib.magScale[0]);
-    if (DEBUG) Serial.print(", ");
-    if (DEBUG) Serial.print(calib.magScale[1]);
-    if (DEBUG) Serial.print(", ");
-    if (DEBUG) Serial.println(calib.magScale[2]);
+    Serial.println("Mag biases X/Y/Z: ");
+    Serial.print(calib.magBias[0]);
+    Serial.print(", ");
+    Serial.print(calib.magBias[1]);
+    Serial.print(", ");
+    Serial.println(calib.magBias[2]);
+    Serial.println("Mag Scale X/Y/Z: ");
+    Serial.print(calib.magScale[0]);
+    Serial.print(", ");
+    Serial.print(calib.magScale[1]);
+    Serial.print(", ");
+    Serial.println(calib.magScale[2]);
   }
   IMU.init(calib, IMU_ADDRESS);
-  if (DEBUG) Serial.println("Calibrado!");
+  Serial.println("Calibrado!");
+}
+
+void verifyMPU() {
+  int err = IMU.init(calib, IMU_ADDRESS);
+  setupMPUFlag = (err == 0);
 }
 
 void setupMPU() {
-  int err = IMU.init(calib, IMU_ADDRESS);
-  if (err != 0) {
-    if (DEBUG) Serial.print("Error initializing IMU: ");
-    if (DEBUG) Serial.println(err);
-    while (true);
-  }
-  if (DEBUG) Serial.println("MPU6050 conectado!");
+  Serial.println("MPU6050 conectado!");
 
   delay(500);
   if(PERFORM_CALIBRATION) {
