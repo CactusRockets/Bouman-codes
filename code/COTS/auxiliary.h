@@ -54,7 +54,16 @@ void printData() {
   if (DEBUG) Serial.println(allData.bmpData.temperature);
   if (DEBUG) Serial.print("Pressure: ");
   if (DEBUG) Serial.println(allData.bmpData.pressure);
-  if (DEBUG) Serial.println("");
+  if (DEBUG) Serial.println("Aceleração em Z");
+  if (DEBUG) Serial.println(allData.imuData.accelZ);
+  if (DEBUG) Serial.println("Quaternion W");
+  if (DEBUG) Serial.println(allData.imuData.quaternion_w);
+  if (DEBUG) Serial.println("Quaternion X");
+  if (DEBUG) Serial.println(allData.imuData.quaternion_x);
+  if (DEBUG) Serial.println("Quaternion Y");
+  if (DEBUG) Serial.println(allData.imuData.quaternion_y);
+  if (DEBUG) Serial.println("Quaternion Z");
+  if (DEBUG) Serial.println(allData.imuData.quaternion_z);
 }
 
 String fixNumberSize(int num, int width, bool enableSignal=false){

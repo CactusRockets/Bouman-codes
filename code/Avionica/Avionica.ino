@@ -11,10 +11,10 @@
   WHEN ENABLE_SERIAL IS TRUE, COTS IS DISABLED 
   BECAUSE THEY CONFLICT THE SAME SERIAL
 */
-#define ENABLE_SERIAL true
+#define ENABLE_SERIAL false // False para usar o COTs
 #define ENABLE_SD false
 #define ENABLE_TELEMETRY true
-#define ENABLE_GPS false
+#define ENABLE_GPS true
 
 struct AvionicData {
   float time;
@@ -59,6 +59,8 @@ String cots_message = "";
 String telemetry_message = "";
 String sd_message = "";
 String solo_message = "";
+
+unsigned long lastTelemetryTime = 0;  
 
 float initial_altitude;
 int package_counter = 0;
@@ -137,20 +139,33 @@ void loop() {
 
   saveMessages();
 
-  println(telemetry_message);
+  // printDebugMessage(telemetry_message);
 
   if(ENABLE_SD) {
-    writeOnSD(telemetry_message);
-  }
+    unsigned long currentMillis = millis();
 
-  if(ENABLE_TELEMETRY) {
-    transmit();
-    if(hasSoloMessage()) {
-      receive();
+    if (currentMillis - lastTelemetryTime >= 1000) {
+      lastTelemetryTime = currentMillis;
+      writeOnSD(telemetry_message);
     }
   }
 
-  delay(1250);
+  if (ENABLE_TELEMETRY) {
+    unsigned long currentMillis = millis();
+
+    // Executa a cada 1000 ms (1 segundo)
+    if (currentMillis - lastTelemetryTime >= 1000) {
+      lastTelemetryTime = currentMillis;
+
+      transmit();
+
+      if (hasSoloMessage()) {
+        receive();
+      }
+    }
+  }
+
+  delay(50);
 }
 
 void setupComponents() {

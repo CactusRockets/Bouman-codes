@@ -95,12 +95,12 @@ void loop() {
   blink(LED_STATE);
   getSensorsMeasures();
   saveMessage();
-  decodeMessage(cots_message);
+  // decodeMessage(cots_message);
   CotsSerial.println(cots_message);
 
   checkApogee();
 
   // printData();
 
-  delay(500);
+  delay(200);
 }

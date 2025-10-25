@@ -51,7 +51,6 @@ void saveDebugMessageOnSD(String message)
     float accelerationY = 5;
     float maximumAltitude = 10;
 
-    myFile.println("-------------------------------------");
     myFile.println("Pacote: " + String(package));
     myFile.println("Altitude: " + String(altitude, 3));
     myFile.println("Aceleração em Z: " + String(accelerationZ, 2));
@@ -66,6 +65,45 @@ void saveDebugMessageOnSD(String message)
     myFile.println("");
 }
 
+void printDebugMessage(String message)
+{
+    int package = extractNumber(message.substring(0, 5), 5);
+    float altitude = 0.001 * extractNumber(message.substring(5, 12), 7, true);
+    float accelerationZ = 0.01 * extractNumber(message.substring(12, 17), 5, true);
+    float quaternionW = 0.01 * extractNumber(message.substring(17, 21), 4, true);
+    float quaternionX = 0.01 * extractNumber(message.substring(21, 25), 4, true);
+    float quaternionY = 0.01 * extractNumber(message.substring(25, 29), 4, true);
+    float quaternionZ = 0.01 * extractNumber(message.substring(29, 33), 4, true);
+    int parachute = extractNumber(message.substring(33, 34), 1) == 0;
+    bool skib1 = parachute > 0;
+    bool skib2 = parachute > 1;
+    float latitude = 0.001 * extractNumber(message.substring(34, 40), 6, true);
+    float longitude = 0.001 * extractNumber(message.substring(40, 46), 6, true);
+    float velocity = 1;
+    float velocityX = 5;
+    float velocityY = 10;
+    float velocityZ = 10;
+    float maximumVelocity = 1;
+    float maximumAcceleration = 1;
+    float acceleration = 1;
+    float accelerationX = 1;
+    float accelerationY = 5;
+    float maximumAltitude = 10;
+
+    Serial.println("-------------------------------------");
+    Serial.println("Pacote: " + String(package));
+    Serial.println("Altitude: " + String(altitude, 3));
+    Serial.println("Aceleração em Z: " + String(accelerationZ, 2));
+    Serial.println("Quaternion W: " + String(quaternionW, 2));
+    Serial.println("Quaternion X: " + String(quaternionX, 2));
+    Serial.println("Quaternion Y: " + String(quaternionY, 2));
+    Serial.println("Quaternion Z: " + String(quaternionZ, 2));
+    Serial.println("Drogo Ativado? : " + String(skib1 ? "Não" : "Sim"));
+    Serial.println("Paraquedas Principal Ativado? : " + String(skib2 ? "Não" : "Sim"));
+    Serial.println("Latitude: " + String(latitude, 6));
+    Serial.println("Longitude: " + String(longitude, 6));
+    Serial.println("");
+}
 
 void setupSd() {
   println("Inicializando o cartão SD...");
