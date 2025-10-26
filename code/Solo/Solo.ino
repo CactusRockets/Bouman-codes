@@ -14,7 +14,7 @@ DataFlight data = DataFlight();
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(115200);
   Serial.println("Serial inicializada!");
 
   pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -29,7 +29,7 @@ void setup()
 void loop()
 {
   // telemetry_message.clear();
-  Serial.println(LoRaSerial.available());
+  // Serial.println(LoRaSerial.available());
 
   if (LoRaSerial.available() > 0)
   {
@@ -64,8 +64,8 @@ void loop()
 
       data = DataFlight(telemetry_message);
 
-      Serial.println(data.getAltitude());
-      Serial.print(data.getMaximumAltitude());
+      // Serial.println(data.getAltitude());
+      // Serial.print(data.getMaximumAltitude());
 
       doc["package"] = data.getPackage();
       doc["altitude"] = data.getAltitude();

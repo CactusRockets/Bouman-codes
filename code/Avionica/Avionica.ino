@@ -11,7 +11,9 @@
   WHEN ENABLE_SERIAL IS TRUE, COTS IS DISABLED 
   BECAUSE THEY CONFLICT THE SAME SERIAL
 */
-#define ENABLE_SERIAL false // False para usar o COTs
+
+// False para usar o COTs
+#define ENABLE_SERIAL false
 #define ENABLE_SD false
 #define ENABLE_TELEMETRY true
 #define ENABLE_GPS true
