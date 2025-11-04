@@ -16,20 +16,16 @@ void desactivateBuzzer() {
   if (DEBUG) Serial.println("Buzzer desativado!");
 }
 
-void tripleBuzzerBip() {
+void beep() {
   activateBuzzer();
   delay(BEEP_TIME);
   desactivateBuzzer();
   delay(BEEP_TIME);
+}
 
-  activateBuzzer();
-  delay(BEEP_TIME);
-  desactivateBuzzer();
-  delay(BEEP_TIME);
-  
-  activateBuzzer();
-  delay(BEEP_TIME);
-  desactivateBuzzer();
-  delay(BEEP_TIME);
+void tripleBuzzerBip() {
+  beep();
+  beep();
+  beep();
 }
 

@@ -63,6 +63,7 @@ String sd_message = "";
 String solo_message = "";
 
 unsigned long lastTelemetryTime = 0;  
+unsigned long lastSDTime = 0;
 
 float initial_altitude;
 int package_counter = 0;
@@ -71,11 +72,11 @@ bool LED_STATE = false;
 
 // import external files
 #include "serial.h"     // debug prints
+#include "buzzer.h"
 #include "telemetry.h"  // telemetria
 #include "moduleSD.h"   // armazenamento SD
 #include "gps.h"        // localizacao gps
 #include "cots.h"       // cots
-#include "buzzer.h"
 
 void setupComponents();
 void getSensorsMeasures();
@@ -144,30 +145,21 @@ void loop() {
   // printDebugMessage(telemetry_message);
 
   if(ENABLE_SD) {
-    unsigned long currentMillis = millis();
-
-    if (currentMillis - lastTelemetryTime >= 1000) {
-      lastTelemetryTime = currentMillis;
+    if (millis() - lastSDTime >= 1000) {
+      lastSDTime = millis();
       writeOnSD(telemetry_message);
     }
   }
 
   if (ENABLE_TELEMETRY) {
-    unsigned long currentMillis = millis();
-
-    // Executa a cada 1000 ms (1 segundo)
-    if (currentMillis - lastTelemetryTime >= 1000) {
-      lastTelemetryTime = currentMillis;
-
+    if (millis() - lastTelemetryTime >= 1000) {
+      lastTelemetryTime = millis();
       transmit();
-
-      if (hasSoloMessage()) {
-        receive();
-      }
+      if (hasSoloMessage()) receive(); 
     }
   }
 
-  delay(50);
+  delay(200);
 }
 
 void setupComponents() {
