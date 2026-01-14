@@ -1,6 +1,6 @@
 # Firmware para aviônica do foguete Bouman
 
-O firmware do foguete Bouman foi desenvolvido em C++, utilizando o ambiente Arduino IDE, responsável pelo controle e pela operação do sistema de aviônica. Esse ambiente foi escolhido por disponibilizar bibliotecas consolidadas para comunicação com sensores, dispositivos de armazenamento e módulos de comunicação, além de facilitar o desenvolvimento, a depuração e a manutenção do código embarcado.
+O firmware do foguete Bouman foi desenvolvido em C++, utilizando o ambiente Arduino IDE (configurado para ESP32), responsável pelo controle e pela operação do sistema de aviônica. Esse ambiente foi escolhido por disponibilizar bibliotecas consolidadas para comunicação com sensores, dispositivos de armazenamento e módulos de comunicação, além de facilitar o desenvolvimento, a depuração e a manutenção do código embarcado.
 
 O funcionamento geral do firmware implementado se baseia em duas fases: setup (onde são inicializados os sensores, definidas as configurações de saída/entrada dos pinos e inicializadas as variáveis para registro de dados) e loop (onde é realizada uma rotina periódica de captação, processamento, transmissão e registro de dados). A transição de um estado para o outro é marcada pelos três beeps do buzzer. Caso não ocorram, houve algum erro de inicialização dos sensores.
 
